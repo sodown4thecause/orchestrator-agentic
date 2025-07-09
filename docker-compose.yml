@@ -1,0 +1,131 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.microservice
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api_gateway:/app
+    environment:
+      - API_KEY=${API_KEY}
+      - POSTGRES_DSN=${POSTGRES_DSN}
+      - REDIS_URL=${REDIS_URL}
+      - DEBUG=${DEBUG:-false}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    depends_on:
+      - postgres
+      - redis
+    command: uvicorn api_gateway.main:app --host 0.0.0.0 --port 8000 --reload
+
+  workflow-engine:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.microservice
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./workflow_engine:/app
+    environment:
+      - API_KEY=${API_KEY}
+      - POSTGRES_DSN=${POSTGRES_DSN}
+      - REDIS_URL=${REDIS_URL}
+      - QDRANT_URL=${QDRANT_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DEBUG=${DEBUG:-false}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    depends_on:
+      - postgres
+      - redis
+      - qdrant
+    command: uvicorn workflow_engine.main:app --host 0.0.0.0 --port 8000 --reload
+
+  agent-runtime:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.microservice
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./agent_runtime:/app
+    environment:
+      - API_KEY=${API_KEY}
+      - REDIS_URL=${REDIS_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DEBUG=${DEBUG:-false}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    depends_on:
+      - redis
+    command: uvicorn agent_runtime.main:app --host 0.0.0.0 --port 8000 --reload
+
+  integration-service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.microservice
+    ports:
+      - "8003:8000"
+    volumes:
+      - ./integration_service:/app
+    environment:
+      - API_KEY=${API_KEY}
+      - POSTGRES_DSN=${POSTGRES_DSN}
+      - REDIS_URL=${REDIS_URL}
+      - DEBUG=${DEBUG:-false}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    depends_on:
+      - postgres
+      - redis
+    command: uvicorn integration_service.main:app --host 0.0.0.0 --port 8000 --reload
+
+  maestro-service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.microservice
+    ports:
+      - "8004:8000"
+    volumes:
+      - ./maestro_service:/app
+    environment:
+      - API_KEY=${API_KEY}
+      - POSTGRES_DSN=${POSTGRES_DSN}
+      - REDIS_URL=${REDIS_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DEBUG=${DEBUG:-false}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    depends_on:
+      - postgres
+      - redis
+    command: uvicorn maestro_service.main:app --host 0.0.0.0 --port 8000 --reload
+
+  postgres:
+    image: postgres:14
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=orchestra
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant-data:/qdrant/storage
+
+volumes:
+  postgres-data:
+  redis-data:
+  qdrant-data:

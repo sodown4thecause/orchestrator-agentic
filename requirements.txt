@@ -1,0 +1,17 @@
+fastapi
+pydantic
+uvicorn
+requests
+psycopg2-binary
+redis
+qdrant-client
+PyYAML
+python-dotenv
+openai
+httpx
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-instrumentation-fastapi
+opentelemetry-exporter-otlp
+pytest
+pytest-asyncio

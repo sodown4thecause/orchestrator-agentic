@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-runtime
+  labels:
+    app: agent-runtime
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: agent-runtime
+  template:
+    metadata:
+      labels:
+        app: agent-runtime
+    spec:
+      containers:
+      - name: agent-runtime
+        image: orchestra/agent-runtime:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: orchestra-secrets
+              key: api-key
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: orchestra-secrets
+              key: redis-url
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: orchestra-secrets
+              key: openai-api-key
+        resources:
+          limits:
+            cpu: "2"
+            memory: "2Gi"
+          requests:
+            cpu: "0.5"
+            memory: "1Gi"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agent-runtime
+spec:
+  selector:
+    app: agent-runtime
+  ports:
+  - port: 80
+    targetPort: 8000
+  type: ClusterIP
