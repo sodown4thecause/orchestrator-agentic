@@ -1,0 +1,50 @@
+{
+  "name": "agentic-workflow-builder",
+  "version": "1.0.0",
+  "description": "An intelligent workflow automation platform that uses natural language to create and manage workflows",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:workflow-engine\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:workflow-engine": "cd workflow-engine && npm run dev",
+    "dev:ai-service": "cd ai-service && npm run dev",
+    "dev:mcp-service": "cd mcp-service && npm run dev",
+    "dev:integration-service": "cd integration-service && npm run dev",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "start": "npm run start:backend",
+    "start:backend": "cd backend && npm start",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install && cd ../workflow-engine && npm install && cd ../ai-service && npm install && cd ../mcp-service && npm install && cd ../integration-service && npm install",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test"
+  },
+  "keywords": [
+    "workflow",
+    "automation",
+    "ai",
+    "natural-language",
+    "no-code",
+    "mcp",
+    "integrations"
+  ],
+  "author": "Agentic Workflow Builder Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "workspaces": [
+    "frontend",
+    "backend",
+    "workflow-engine",
+    "ai-service",
+    "mcp-service",
+    "integration-service",
+    "shared"
+  ],
+  "dependencies": {
+    "axios": "^1.10.0"
+  }
+}

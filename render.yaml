@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: flowintent-frontend
+    runtime: docker
+    dockerfile: ./frontend/Dockerfile
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: REACT_APP_API_URL
+        value: https://flowintent-backend.onrender.com
+    healthCheckPath: /
+    plan: starter
+    numInstances: 2
+
+  - type: web
+    name: flowintent-backend
+    runtime: docker
+    dockerfile: ./backend/Dockerfile
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8000
+      - key: DATABASE_URL
+        value: postgres://flowintent_user:${DB_PASSWORD}@${DB_HOST}:5432/flowintent
+      - key: REDIS_URL
+        value: redis://${REDIS_HOST}:6379
+      - key: JWT_SECRET
+        value: ${JWT_SECRET}
+    healthCheckPath: /health
+    plan: starter
+    numInstances: 2
+
+databases:
+  - name: flowintent-db
+    plan: starter
+    databaseName: flowintent
+    user: flowintent_user

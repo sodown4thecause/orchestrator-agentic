@@ -1,0 +1,101 @@
+name: flowintent-prod
+region: sfo3
+services:
+  - name: frontend
+    github:
+      branch: main
+      deploy_on_push: true
+    dockerfile_path: ./frontend/Dockerfile
+    source_dir: ./frontend
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: REACT_APP_API_URL
+        value: https://api.flowintent.com
+    instance_size_slug: basic-xxs
+    instance_count: 2
+    health_check:
+      http_path: /
+      port: 3000
+
+  - name: backend
+    github:
+      branch: main
+      deploy_on_push: true
+    dockerfile_path: ./backend/Dockerfile
+    source_dir: ./backend
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "8000"
+      - key: DATABASE_URL
+        scope: RUN_AND_BUILD_TIME
+        value: ${PROD_DATABASE_URL}
+      - key: REDIS_URL
+        value: ${PROD_REDIS_URL}
+      - key: JWT_SECRET
+        scope: RUN_AND_BUILD_TIME
+        value: ${JWT_SECRET}
+    instance_size_slug: basic-xs
+    instance_count: 2
+    health_check:
+      http_path: /health
+      port: 8000
+
+  - name: workflow-engine
+    github:
+      branch: main
+      deploy_on_push: true
+    dockerfile_path: ./workflow-engine/Dockerfile
+    source_dir: ./workflow-engine
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "8001"
+      - key: DATABASE_URL
+        scope: RUN_AND_BUILD_TIME
+        value: ${PROD_DATABASE_URL}
+      - key: REDIS_URL
+        value: ${PROD_REDIS_URL}
+    instance_size_slug: basic-xs
+    instance_count: 2
+    health_check:
+      http_path: /health
+      port: 8001
+
+databases:
+  - name: flowintent-db
+    engine: PG
+    version: "15"
+    size: db-s-2vcpu-4gb
+    num_nodes: 1
+    production: true
+
+  - name: flowintent-redis
+    engine: REDIS
+    version: "7"
+    size: db-s-2vcpu-4gb
+    num_nodes: 1
+    production: true
+
+envs:
+  - key: PROD_DATABASE_URL
+    scope: RUN_AND_BUILD_TIME
+    value: ${PROD_DATABASE_URL}
+  - key: PROD_REDIS_URL
+    scope: RUN_AND_BUILD_TIME
+    value: ${PROD_REDIS_URL}
+  - key: JWT_SECRET
+    scope: RUN_AND_BUILD_TIME
+    value: ${JWT_SECRET}
+  - key: OPENAI_API_KEY
+    scope: RUN_AND_BUILD_TIME
+    value: ${OPENAI_API_KEY}
+
+domains:
+  - domain: flowintent.com
+    type: PRIMARY
+  - domain: www.flowintent.com
+    type: ALIAS

@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "subscriptionId": {
+            "value": "4c76ecb7-513b-484c-9716-19f32df29639"
+        },
+        "name": {
+            "value": "orchestraor"
+        },
+        "location": {
+            "value": "Canada Central"
+        },
+        "ftpsState": {
+            "value": "FtpsOnly"
+        },
+        "storageAccountName": {
+            "value": "orchestrgroup99b3"
+        },
+        "use32BitWorkerProcess": {
+            "value": false
+        },
+        "linuxFxVersion": {
+            "value": "DOCKER|mcr.microsoft.com/azure-functions/dotnet8-quickstart-demo:1.0"
+        },
+        "environmentName": {
+            "value": "managedEnvironment-orchestrgroup-946e"
+        },
+        "workspaceName": {
+            "value": "workspaceorchestrgroupb2f1"
+        },
+        "workspaceLocation": {
+            "value": "canadacentral"
+        },
+        "managedEnvironmentId": {
+            "value": "/subscriptions/4c76ecb7-513b-484c-9716-19f32df29639/resourceGroups/orchestr_group/providers/Microsoft.App/managedEnvironments/managedEnvironment-orchestrgroup-946e"
+        },
+        "workloadProfileName": {
+            "value": "Consumption"
+        },
+        "resourceConfig": {
+            "value": {
+                "cpu": "1",
+                "memory": "2Gi"
+            }
+        }
+    }
+}

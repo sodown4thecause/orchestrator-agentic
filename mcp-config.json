@@ -1,0 +1,52 @@
+{
+  "mcpServers": {
+    "Ref": {
+      "command": "npx",
+      "args": [
+        "mcp-remote@0.1.0-0",
+        "https://api.ref.tools/mcp",
+        "--header",
+        "x-ref-api-key: ref-57210845759dab8bb7f6"
+      ],
+      "description": "AI-powered research and reference tool using streamable HTTP (recommended)"
+    },
+    "Ref-Legacy": {
+      "command": "npx",
+      "args": ["ref-tools-mcp@latest"],
+      "env": {
+        "REF_API_KEY": "ref-57210845759dab8bb7f6"
+      },
+      "description": "AI-powered research and reference tool using stdio (legacy)"
+    }
+  },
+  "documentation": {
+    "ref": {
+      "streamableHTTP": {
+        "description": "Streamable HTTP configuration (recommended as of April 2025)",
+        "config": {
+          "command": "npx",
+          "args": [
+            "mcp-remote@0.1.0-0",
+            "https://api.ref.tools/mcp",
+            "--header",
+            "x-ref-api-key: ref-57210845759dab8bb7f6"
+          ]
+        }
+      },
+      "stdio": {
+        "description": "Legacy stdio configuration",
+        "config": {
+          "command": "npx",
+          "args": ["ref-tools-mcp@latest"],
+          "env": {
+            "REF_API_KEY": "ref-57210845759dab8bb7f6"
+          }
+        }
+      }
+    }
+  },
+  "verification": {
+    "testCommand": "Use ref to look up how to write an MCP client",
+    "expectedResponse": "Should return information about MCP client development"
+  }
+}
