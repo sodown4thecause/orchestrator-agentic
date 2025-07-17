@@ -19,7 +19,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "npx --no-install vite build",
+    "build": "node build.js",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "start": "vite preview",
