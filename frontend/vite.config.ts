@@ -8,5 +8,21 @@ export default defineConfig({
     proxy: {
       '/api': 'http://localhost:8000'
     }
+  },
+  css: {
+    modules: {
+      localsConvention: 'camelCaseOnly'
+    },
+    postcss: {
+      plugins: [
+        require('tailwindcss'),
+        require('autoprefixer')
+      ]
+    }
+  },
+  build: {
+    cssCodeSplit: true,
+    minify: true,
+    sourcemap: false
   }
 })
